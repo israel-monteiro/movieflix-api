@@ -1,7 +1,10 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "../listagem-filmes.json" with { type: "json" };
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
+const swaggerDocument = require("../swagger.json");
 
 const port = 3000;
 const app = express();
