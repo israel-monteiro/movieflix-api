@@ -99,12 +99,37 @@ app.delete("/movies/:id", async (req, res) => {
             where: { id },
         });
     } catch {
-        return res
-            .status(500)
-            .send({ message: "Falha ao excluir o filme" });
+        return res.status(500).send({ message: "Falha ao excluir o filme" });
     }
 
     res.status(200).send();
+});
+
+app.get("/movies/:genreName", async (req, res) => {
+    try {
+        const genreName = req.params.genreName;
+
+        const moviesFilteredByGenreName = await prisma.movie.findMany({
+            include: {
+                genres: true,
+                languages: true,
+            },
+            where: {
+                genres: {
+                    name: {
+                        equals: genreName,
+                        mode: "insensitive",
+                    },
+                },
+            },
+        });
+
+        res.status(200).send(moviesFilteredByGenreName);
+    } catch {
+        return res
+            .status(500)
+            .send({ message: "Falha ao filtrar filmes por gênero" });
+    }
 });
 
 app.listen(port, () => {
